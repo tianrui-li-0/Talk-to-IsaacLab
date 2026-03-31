@@ -1,55 +1,72 @@
 # PCE-Physical-Constraints-Engine
 Continuous physical critical-state trajectories for VLA Safety Layers and JEPA Cost Modules. Auto-curating near-failure dynamics (ZMP boundary, torque limits) via IsaacLab from a bedroom lab. 
 
-**Tooling**: IsaacLab MCP automation for continuous trajectory collection from a bedroom lab.
-
-## Positioning (Now → Next)
-
-**Now**: IsaacLab MCP tooling + continuous near-failure trajectory curation  
-**Next**: Standard dataset for VLA Safety Filters and JEPA Cost Module training
-
-## Why This Matters
-
-- **V-JEPA 2 (Meta 2025)** shipped World Model but **deliberately omitted Cost Module & Actor**[^222^], leaving no "pain evaluation" capability.
-- **LeCun's JEPA** requires Cost Module: Intrinsic Cost (hard-coded physics) + Trainable Critic (learned consequences from **temporal trajectories**)[^316^].
-- **Current VLAs (Figure/Tesla)** dropped explicit physics layers for end-to-end speed, causing **physical hallucinations** (dragging pitchforks, torque overflows)[^255^][^261^].
-- **The Gap**: VLAs can generate motion, but **someone must tell them "this hurts"** — that's the Cost Module's job.
-
-## What We Do
-
-Use IsaacLab as a **continuous critical-trajectory generator**, capturing **temporal dynamics from stability → boundary → failure**:
-
-- **Instability Trajectories**: Continuous CoM projection drifting from support polygon interior → boundary → violation (ZMP-critical sequences).
-- **Torque Limit Trajectories**: Joint torque evolution from safe → warning → overload over 100-200ms.
-- **Contact Hazard Trajectories**: Contact force accumulation from light touch → critical threshold → structural risk.
-
-**Data Format**: **Time-series state vectors** `[s_t0, s_t1, ..., s_tn]` (50-200 frames per trajectory) mapping to final outcome (recovered/fallen/intervened).
-
-## Tech Stack
-
-- **MCP Production Layer**: Automated IsaacLab pipeline for batch trajectory generation.
-- **Data Schema**: Continuous state sequences with physics gradients (differentiable CoM, ZMP, torques).
-- **Target**: Plug-in Cost Critic for JEPA, or real-time Safety Filter for VLAs.
-
-## Roadmap
-
-- [x] Phase 1: MCP tooling + continuous trajectory capture (bedroom validation)
-- [ ] Phase 2: 100k+ continuous critical trajectories (locomotion, manipulation, climbing)
-- [ ] Phase 3: Open-source Cost Critic weights (JEPA-compatible, VLA Safety Layer)
-
-## Data Value
-
-Unlike video datasets (positive-biased), we provide **"physics pain memory"**:
-
-- **Dense negative samples**: 100k+ continuous near-failure trajectories (impossible to collect in real world due to hardware damage cost).
-- **Temporal resolution**: Precise dynamics of *how* failure unfolds, not just *that* it fails.
-- **Differentiable physics**: CoM, ZMP, contact forces, torques — ready for gradient-based optimization.
-
-**Use for**:
-- JEPA Trainable Critic (predicting long-term physical consequences from trajectories)
-- VLA Safety Filter (real-time trend detection: "this trajectory leads to pain")
-- Model-Based RL cost shaping
+**Tooling**: IsaacLab MCP automation for continuous physical boundary-proximal trajectory collection.
 
 ---
 
-*Note: We don't replace World Models or VLAs. We provide the missing **physics pain nervous system** — teaching AI to feel hurt before it breaks.*
+## Positioning (Now → Next)
+
+**Now**: IsaacLab MCP tooling + continuous boundary-proximal trajectory curation  
+**Next**: Standard dataset for embodied AI physical constraint evaluation
+
+---
+
+## Why This Matters
+
+- **End-to-end VLAs** (Figure, Tesla, etc.) removed explicit physics layers to maximize inference speed, causing dangerous failures—dragging jammed objects, torque overflows, blind-spot collisions.
+- **JEPA World Models** (LeCun architecture) explicitly lack the Cost Module required to evaluate "will this action damage hardware."
+- **Real-world data is prohibitively expensive**: Critical states often destroy hardware (e.g., $50k repair per humanoid fall), preventing repeatable experiments and dense negative sampling.
+
+---
+
+## What We Do
+
+Use IsaacLab as a **continuous boundary-proximal trajectory generator**, capturing the complete physical evolution as systems approach and trigger constraint boundaries:
+
+- **Support Boundary**: Center-of-Mass projection drifting from stable zone → support polygon edge → instability (e.g., pre-slip dynamics, terrain edge detection).
+- **Torque Boundary**: Joint forces accumulating from safe load → warning threshold → hardware limit violation (e.g., overreach torque buildup in manipulation).
+- **Contact Boundary**: Contact forces escalating from light touch → structural risk threshold → overload (e.g., pre-collision force accumulation, grip slip detection).
+
+**Data Format**: Continuous state sequences (multi-frame records of CoM, ZMP, joint torques, contact forces, terrain properties, etc.), labeled with final constraint outcome (safe/limit exceeded/damage/intervened).
+
+---
+
+## Technical Stack
+
+- **MCP Production Layer**: Automated IsaacLab pipeline for batch trajectory generation via mobile/CLI interface.
+- **Data Schema**: Continuous state vectors with differentiable physics quantities (gradient-ready for model training).
+- **Target Architecture**: Plug-in Cost Critic for JEPA, or real-time Safety Filter for VLA systems.
+
+**Applicable To**:
+- Humanoid dynamic balance (any terrain/posture)
+- Manipulator force control (contact-rich tasks: insertion, stacking, dragging)
+- Legged robot locomotion (any gait/terrain)
+- **Any embodied task with physical constraint boundaries**
+
+---
+
+## Roadmap
+
+- [x] Phase 1: MCP tooling + continuous trajectory collection (concept validation via single-workstation setup)
+- [ ] Phase 2: Large-scale cross-scene boundary-proximal dataset (locomotion, manipulation, climbing)
+- [ ] Phase 3: Open-source Physical Constraint Evaluation models (compatible with JEPA Cost Modules and VLA Safety Layers)
+
+---
+
+## Data Value
+
+Unlike generic video datasets (positive-biased), we provide **"boundary exploration records"**:
+
+- **Dense boundary-proximal states**: Continuous trajectories capturing the approach toward—but not yet fully triggering—hardware damage (impossible to collect in real world due to equipment destruction cost).
+- **Temporal Evolution**: Records *how* physical parameters evolve toward boundaries, not just binary boundary triggers.
+- **Differentiable Physics**: CoM, ZMP, contact force vectors, joint torques, accelerations—ready for gradient-based optimization and neural network training.
+
+**Used For**:
+- Training JEPA Trainable Critics (predicting long-term physical consequences from state trajectories)
+- VLA Safety Filters (real-time detection of boundary-approaching trends before damage occurs)
+- Model-Based RL constraint shaping (physics-guided policy optimization)
+
+---
+
+*Note: This project does not replace World Models or VLAs. It provides the missing **Physical Constraint Evaluation Layer**—enabling embodied AI to recognize dangerous states before hardware damage occurs.*
