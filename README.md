@@ -14,7 +14,7 @@
 - **One-liner training:** "Train Go2 with 8 envs, stop at 1000 iter" → it runs (PID tracked, logs saved)
 - **Phone-side monitoring:** Real-time training stream without SSH/VNC
 - **AI cfg editor:** Change `alive=2` → `terminated=-5` via chat, not manual
-- **Cost circuit-breaker:** >¥0.20 operations blocked (prevents API bill shock from over-eager LLM loops)
+- **Cost circuit-breaker:** Blocks >¥0.20 ops (prevents token-cost shock from full log reads)
 - **Cyber Therapy:** When training crashes, ask "wtf happened?" — AI analyzes logs + maybe roasts your code.
 
 **The messy (v0.1):**
