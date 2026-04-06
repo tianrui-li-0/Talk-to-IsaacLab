@@ -4,7 +4,7 @@
 > No more manual tuning or **staring at screens** (you know what I mean). Just talk.
 > Control training from your bed. ¥1.5/3days (DeepSeek API cost).
 
-[Watch Demo](./DEMO.mp4)
+[Watch Demo](./lv_0_20260406231406.mp4)
 
 
 ---
