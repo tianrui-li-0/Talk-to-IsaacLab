@@ -41,7 +41,7 @@ TASK_NAME = "Isaac-StandUp-Go2-v0"             # ← Your task ID
 `client.py` (in `CONFIG = {}`):
 
 ```python
-api_key = "sk-your-key-here"  # ← Get from platform.deepseek.com (¥10 free credit)
+api_key = "sk-your-key-here"  # ← Get from platform.deepseek.com (¥10)
 ```
 
 2. Run (single window)
